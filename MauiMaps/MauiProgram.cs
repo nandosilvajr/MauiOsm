@@ -1,9 +1,10 @@
 ﻿using CommunityToolkit.Maui;
-using Mapsui.Samples.Maui.ViewModel;
+using Mapsui.ViewModels;
 using MauiMaps.Controls;
 using MauiMaps.Services;
 using Microsoft.Extensions.Logging;
 using SkiaSharp.Views.Maui.Controls.Hosting;
+using DotNet.Meteor.HotReload.Plugin;
 using Refit;
 
 namespace MauiMaps;
@@ -21,7 +22,10 @@ public static class MauiProgram
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-            });
+            })
+            #if DEBUG
+            .EnableHotReload();
+            #endif
         builder.Services.AddSingleton<MainViewModel>(); 
         builder.Services.AddSingleton<MainPage>();
         builder.Services.AddRefitClient<IItineroServiceAPI>()
@@ -29,10 +33,6 @@ public static class MauiProgram
 
 #if DEBUG
         builder.Logging.AddDebug();
-        HttpClientHandler insecureHandler = GetInsecureHandler();
-        HttpClient client = new HttpClient(insecureHandler);
-#else
-        HttpClient client = new HttpClient();
 #endif
 
         return builder.Build();

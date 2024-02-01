@@ -1,20 +1,21 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:maui="clr-namespace:Mapsui.UI.Maui;assembly=Mapsui.UI.Maui"
-             xmlns:view="clr-namespace:MauiMaps"
              xmlns:mauitoolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             x:DataType="view:MainPage"
+             xmlns:viewModels="clr-namespace:Mapsui.ViewModels"
+             x:DataType="viewModels:MainViewModel"
              x:Class="MauiMaps.MainPage">
     <ContentPage.Resources>
         <ResourceDictionary>
             <mauitoolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
         </ResourceDictionary>
     </ContentPage.Resources>
-    <Grid 
-        VerticalOptions="Fill" 
+    <Grid
+        VerticalOptions="Fill"
         HorizontalOptions="Fill"
-        RowDefinitions="18*, 2*, 2*">
+        RowDefinitions="18*, 2*">
         <StackLayout
             x:Name="HorizontalButtons"
             Grid.Row="1"
@@ -29,76 +30,51 @@
                 ColumnDefinitions="2*, 1*"
                 HorizontalOptions="Start"
                 VerticalOptions="Center">
-                <BoxView 
-                    Grid.Column="0" 
-                    Grid.ColumnSpan="2" 
-                    CornerRadius="10" 
-                    Color="White" 
+                <BoxView
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    CornerRadius="10"
+                    Color="White"
                     Opacity="0.8">
                 </BoxView>
-                
-                <Label 
+                <Label
                     Grid.Column="0"
                     Margin="10"
-                    Text="Get directions" 
-                    VerticalOptions="Center"></Label>
+                    Text="Get directions"
+                    VerticalOptions="Center">
+                </Label>
                 <CheckBox
                     x:Name="CheckBox"
                     Grid.Column="1"
-                    CheckedChanged="CheckBox_OnCheckedChanged"
-                    VerticalOptions="Center"></CheckBox>
+                    IsChecked="{Binding DirectionsActive}"
+                    VerticalOptions="Center">
+                </CheckBox>
             </Grid>
-            <Button 
+            <Button
                 x:Name="clearBtn"
                 IsVisible="{Binding Source={x:Reference CheckBox}, Path=IsChecked}"
                 HorizontalOptions="End"
                 Text="Clear"
-                    Clicked="ClearBtn_OnClicked"></Button>
-            <Button 
+                Command="{Binding ClearMapCommand}">
+            </Button>
+            <Button
                 x:Name="goBtn"
                 IsVisible="{Binding Source={x:Reference CheckBox}, Path=IsChecked}"
                 HorizontalOptions="End"
                 Text="Directions"
-                Clicked="GoBtn_OnClicked"></Button>
+                Command="{Binding GetDirectionsCommand}">
+            </Button>
         </StackLayout>
-        <StackLayout 
-            x:Name="PolygonLayout"
-            Grid.Row="2"
-            Margin="10"
-                     VerticalOptions="End"
-                     HorizontalOptions="Fill"
-                     ZIndex="1">
-            <Grid
-                WidthRequest="170"
-                ColumnDefinitions="2*, 1*"
-                HorizontalOptions="Start"
-                VerticalOptions="Center">
-                <BoxView 
-                    Grid.Column="0" 
-                    Grid.ColumnSpan="2" 
-                    CornerRadius="10" 
-                    Color="White" 
-                    Opacity="0.8">
-                </BoxView>
-                
-                <Label 
-                    Grid.Column="0"
-                    Margin="10"
-                    Text="Add polygon" 
-                    VerticalOptions="Center"></Label>
-                <CheckBox
-                    x:Name="CheckBoxPolygon"
-                    Grid.Column="1"
-                    VerticalOptions="Center"></CheckBox>
-            </Grid>
-        </StackLayout>
-        <maui:MapView x:Name="mapView"
-
-                      Grid.RowSpan="3"
-                      IsVisible="true"
-                      VerticalOptions="FillAndExpand"
-                      HorizontalOptions="FillAndExpand"
-                      BackgroundColor="Gray" 
-                      Margin="0" />
+        <maui:MapView
+            Grid.RowSpan="2"
+            IsVisible="true"
+            VerticalOptions="FillAndExpand"
+            HorizontalOptions="FillAndExpand"
+            BackgroundColor="Gray"
+            IsZoomButtonVisible="True"
+            IsMyLocationButtonVisible="False"
+            MyLocationEnabled="False"
+            Map="{Binding MapView.Map}"
+            Margin="0" />
     </Grid>
 </ContentPage>

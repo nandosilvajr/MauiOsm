@@ -11,6 +11,4 @@ Make sure the Itinero.API is running to test the routes in the Maui application.
 
 Enjoy!!!
 
-![routes](https://github.com/nandosilvajr/MauiOsm/assets/32247688/3211affd-ef6b-427e-b435-b09bc5aca58d)
-
 ![ezgif-4-d2be54e2b6](https://github.com/nandosilvajr/MauiOsm/assets/32247688/17bf70d5-c77a-4db1-a6b1-fefb3fbe5a03)

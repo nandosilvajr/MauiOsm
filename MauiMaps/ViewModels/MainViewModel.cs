@@ -24,6 +24,10 @@ using Brush = Mapsui.Styles.Brush;
 using Color = Mapsui.Styles.Color;
 using SkiaSharp.Views.Maui;
 using Mapsui.Extensions;
+using BruTile.Web;
+using BruTile.Predefined;
+using Mapsui.Tiling.Layers;
+using System.Diagnostics;
 
 #pragma warning disable IDISP008 // Don't assign member with injected and created disposables.
 
@@ -55,16 +59,28 @@ public partial class MainViewModel(IItineroServiceAPI itineroServiceApi) : Obser
 
     [ObservableProperty] ItineroRoute _itineroRoute;
 
+    [ObservableProperty] bool _isBusy;
+
     [RelayCommand]
     private async Task GetDirections()
     {
-        if (_cordinates.Count != 2) return;
+        IsBusy = true;
+        if (_cordinates.Count != 2) {
+            IsBusy = false;
+            return;
+        };
 
         var lineStringLayer = await CreateLineStringLayer(style: CreateLineStringStyle());
 
-        if (lineStringLayer is null) return;
+        if (lineStringLayer is null) {
+            IsBusy = false; 
+            return;
+            }
 
-        if (MapView.Map.Layers.Count == 0) return;
+        if (MapView.Map.Layers.Count == 0) {
+            IsBusy = false;
+            return;
+            }
 
         var pinLayers = MapView.Map?.Layers.FirstOrDefault(x => x.Name.Equals("Pins"));
         var pinIndex = MapView.Map?.Layers.ToList().IndexOf(pinLayers);
@@ -88,6 +104,7 @@ public partial class MainViewModel(IItineroServiceAPI itineroServiceApi) : Obser
                     }
                 });
         }
+        IsBusy = false;
     }
 
     [RelayCommand]
@@ -155,12 +172,8 @@ public partial class MainViewModel(IItineroServiceAPI itineroServiceApi) : Obser
                     _startPin.Callout.TitleFontAttributes = FontAttributes.None;
                     _startPin.Callout.TitleFontSize = 12;
                     _startPin.Callout.SubtitleFontAttributes = FontAttributes.None;
-                    _startPin.Callout.Padding = 8;
-                    _startPin.Callout.IsClosableByClick = true;
-                    _startPin.Callout.Content = 1;
                     _startPin.Callout.Subtitle = "Start pin subtitle";
                     _startPin.Callout.RectRadius = 5;
-                    _startPin.Callout.CalloutClicked += OnCloseCallout;
                     MapView.Pins.Add(_startPin);
                 }
                 else
@@ -180,12 +193,6 @@ public partial class MainViewModel(IItineroServiceAPI itineroServiceApi) : Obser
             }
         }
     }
-
-    private void OnCloseCallout(object sender, CalloutClickedEventArgs e)
-    {
-        e.Callout.Dispose();
-    }
-
     private Map CreateMap()
     {
         var map = new Map();
@@ -234,10 +241,9 @@ public partial class MainViewModel(IItineroServiceAPI itineroServiceApi) : Obser
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
-
+            Debug.WriteLine(e.Message);
+            IsBusy = false;
             await Application.Current.MainPage.DisplayAlert("Error", "Was not possible request the direction", "Ok");
-
             return null;
         }
 

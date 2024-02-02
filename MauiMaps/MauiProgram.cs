@@ -4,7 +4,7 @@ using MauiMaps.Controls;
 using MauiMaps.Services;
 using Microsoft.Extensions.Logging;
 using SkiaSharp.Views.Maui.Controls.Hosting;
-using DotNet.Meteor.HotReload.Plugin;
+
 using Refit;
 
 namespace MauiMaps;
@@ -24,7 +24,8 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             })
             #if DEBUG
-            .EnableHotReload();
+            //.EnableHotReload()
+            ;
             #endif
         builder.Services.AddSingleton<MainViewModel>(); 
         builder.Services.AddSingleton<MainPage>();

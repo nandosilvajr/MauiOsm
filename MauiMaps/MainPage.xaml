@@ -16,6 +16,11 @@
         VerticalOptions="Fill"
         HorizontalOptions="Fill"
         RowDefinitions="18*, 2*">
+        <ActivityIndicator 
+        IsRunning="{Binding IsBusy}" ZIndex="2"
+        WidthRequest="50"
+        HeightRequest="50"
+         />
         <StackLayout
             x:Name="HorizontalButtons"
             Grid.Row="1"
@@ -37,6 +42,7 @@
                     Color="White"
                     Opacity="0.8">
                 </BoxView>
+
                 <Label
                     Grid.Column="0"
                     Margin="10"
@@ -72,8 +78,8 @@
             HorizontalOptions="FillAndExpand"
             BackgroundColor="Gray"
             IsZoomButtonVisible="True"
+            IsNorthingButtonVisible="False"
             IsMyLocationButtonVisible="False"
-            MyLocationEnabled="False"
             Map="{Binding MapView.Map}"
             Margin="0" />
     </Grid>
